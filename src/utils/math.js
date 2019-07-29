@@ -1,0 +1,1 @@
+export const zmod = (a, b) => a - (Math.floor(a / b) * b)
