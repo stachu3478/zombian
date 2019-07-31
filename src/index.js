@@ -1,5 +1,5 @@
 import App from './App'
-import './style.css'
+import './style.scss'
 
 App()
 

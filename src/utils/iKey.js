@@ -4,9 +4,6 @@ export const pressed = {
     aimDirection: 0
 }
 
-window.requestFullScreen = window.requestFullScreen || window.webkitRequestFullScreen || window.mozRequestFullScreen
-let fullScreenRequested = false
-
 if (navigator.maxTouchPoints) {
     const noneTouch = {identifier: -1}
     let moveControllerTouch = noneTouch
@@ -21,15 +18,11 @@ if (navigator.maxTouchPoints) {
         let moveTouch = false
         let attackTouch = false
         let preventDefault = true
-        if (!fullScreenRequested) {
-            fullScreenRequested = true
-            window.requestFullScreen()
-        }
         for (let i = 0; i < evt.changedTouches.length; i++) {
             const touch = evt.changedTouches[i]
             switch (touch.target) {
                 case moveControllerElement : {
-                    if (!moveTouch) break
+                    if (moveTouch) break
                     moveTouch = true
                     moveControllerTouch = touch
                     pressed.ArrowRight = 0;
@@ -38,7 +31,7 @@ if (navigator.maxTouchPoints) {
                     pressed.ArrowUp = 0;
                 } break;
                 case aimControllerElement : {
-                    if (!attackTouch) break
+                    if (attackTouch) break
                     attackTouch = true
                     attackControllerTouch = touch
                     attackTouchTap = true
@@ -154,5 +147,6 @@ if (navigator.maxTouchPoints) {
     })
     document.body.addEventListener('mousedown', evt => {
         pressed.Mouse = true
+        document.body.requestFullScreen()
     })
 }

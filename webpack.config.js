@@ -6,12 +6,15 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
     mode: 'production',
+    // splitChunks: 'all',
     entry: {
-        app: './src/index.js'
+        app: './src/index.js',
+        // game: './src/classes/Game.js'
     },
     output: {
         filename: '[name].bundle.js',
-        path: path.resolve(__dirname, 'dist')
+        chunkFilename: '[name].bundle.js',
+        path: path.resolve(__dirname, 'dist'),
     },
     optimization: {
         splitChunks: {
@@ -49,6 +52,12 @@ module.exports = {
                 "style-loader", // creates style nodes from JS strings
                 "css-loader", // translates CSS into CommonJS
             ]
-        }]
-    }
+        },
+        {
+            test: /\.(png|svg|jpg|gif)$/,
+            use: [
+              'file-loader'
+            ]
+        }
+    ]}
 }

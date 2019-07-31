@@ -1,0 +1,125 @@
+@keyframes test {
+    0%{
+        left: -22vw;
+    }
+    100%{
+        left: 0vw;
+    }
+}
+
+@keyframes disap {
+    0%{
+        z-index: 1;
+        opacity: 1
+    }
+    90%{
+        z-index: 1;
+        display: unset
+    }
+    100%{
+        z-index: -2;
+        opacity: 0;
+        display: none !important
+    }
+}
+
+.main-menu {
+    margin: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    font-family: Consolas;
+    h1 {
+        color: lime;
+        text-shadow: -5px 0 black, 0 5px black, 5px 0 black, 0 -5px black;
+        background-color: rgba(200, 200, 200, 0.1)
+    }
+    button {
+        font-size: 1cm;
+        padding-left: 1cm;
+        padding-right: 1cm;
+        margin-top: 5mm;
+        border: 3px white solid;
+        border-radius: 3px;
+        color: white;
+        font-weight: bold;
+        background-color: rgb(30, 30, 30);
+        &:hover {
+            background-color: rgb(60, 60, 60);
+        }
+        &:active {
+            background-color: black;
+        }
+    }
+    div {
+        p {
+            text-align: center
+        }
+        .loader {
+            display: flex;
+            position: static;
+            border-radius: 3px;
+            border: 1px white solid;
+            width: 25vw;
+            height: 5mm;
+            margin-top: 2mm;
+            div {
+                height: 100%;
+                width: 0%;
+                background-color: cyan;
+                overflow-y: hidden;
+                overflow-x: hidden;
+                background-image: repeating-linear-gradient(135deg, cyan, cyan 4vw, black 1vw, black 9vw);
+                div {
+                    position: relative;
+                    width: 200vw;
+                    height: 100vw;
+                    animation: test 0.2s infinite linear;
+                }
+            }
+        }
+    }
+
+    header {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        text-align: right;
+        color: white;
+        background-color: black;
+        font-size: 12px;
+        display: flex;
+        flex-direction: row-reverse;
+        a {
+            margin-right: 16px;
+            color: lightblue;
+        }
+    }
+    
+    footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        text-align: right;
+        color: white;
+        background-color: black;
+        font-size: 10px;
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+.hidden-fluent {
+	animation: disap 0.5s linear forwards;
+}
+
+.hidden {
+	display: none !important
+}

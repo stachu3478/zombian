@@ -3,6 +3,10 @@ body {
     color: white;
 }
 
+.game-interface {
+    text-align: center
+}
+
 canvas {
     margin: 0;
     position: absolute;

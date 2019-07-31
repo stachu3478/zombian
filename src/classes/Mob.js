@@ -32,8 +32,7 @@ class Mob {
 
     checkPos (px, py, isTarget) {
         const block = this.tileMap.getBlock(px, py)
-        if (!block || (block.c && isTarget)) {
-            console.log('isTarget')
+        if (!block) {
             return false
         }
         if (block.c) {
@@ -42,6 +41,7 @@ class Mob {
                 this.knock(mob, 2)
                 return false
             }
+            if (isTarget) return false
         }
         return true
     }

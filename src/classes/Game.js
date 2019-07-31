@@ -3,22 +3,30 @@ import Hero from "./Hero"
 import Enemy from "./Enemy"
 import Renderer from "./Renderer"
 import TileMap from "./TileMap"
+import './style.css'
+
+import { pressed } from '../utils/iKey'
+import { load } from '../components/images'
 
 class Game {
-    constructor (canvas, keyboard, camera) {
+    constructor (canvas) {
         this.canvas = canvas
-        this.camera = camera || new Camera(canvas, 0, 0, -640, 640, -640, 640)
-        this.keyboard = keyboard
+        this.camera = new Camera(canvas, 0, 0, -640, 640, -640, 640)
+        this.keyboard = pressed
         this.ctx = canvas.getContext('2d')
         this.renderer = new Renderer(this.camera, this.canvas, this.ctx)
         this.tileMap = new TileMap()
-        this.hero = new Hero(keyboard, this.camera, this.ctx, this.tileMap)
+        this.hero = new Hero(this.keyboard, this.camera, this.ctx, this.tileMap)
 
         this.paused = false
 
         this.enemies = new Set()
         this.spawnedEnemies = 1
         this.gameTime = 1
+    }
+
+    ready () {
+        return load()
     }
 
     start () {

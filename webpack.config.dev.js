@@ -4,11 +4,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     mode: 'development',
+    // splitChunks: 'all',
     entry: {
-        app: './src/index.js'
+        app: './src/index.js',
+        // game: './src/classes/Game.js'
     },
     output: {
         filename: '[name].bundle.js',
+        chunkFilename: '[name].bundle.js',
         path: path.resolve(__dirname, 'dist')
     },
     devServer: {

@@ -43,7 +43,7 @@ class Enemy extends Mob {
                 this.x = Math.random() * 1260 - 620
             }break;
         }
-        if (this.checkPos(this.x, this.y)) this.claimBlock()
+        if (this.checkPos(this.x, this.y, true)) this.claimBlock()
         else return false
         this.spawned = true
         this.changeDir()
@@ -123,7 +123,7 @@ class Enemy extends Mob {
 
     checkPos (px, py, isTarget) {
         const block = this.tileMap.getBlock(px, py)
-        if (!block || (block.c && isTarget)) {
+        if (!block) {
             return false
         }
         if (block.c) {
@@ -136,6 +136,7 @@ class Enemy extends Mob {
                 } else this.knock(mob, 2)
                 return false
             }
+            if (isTarget) return false
         }
         return true
     }
