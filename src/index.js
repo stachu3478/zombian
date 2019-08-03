@@ -1,7 +1,9 @@
 import App from './App'
 import './style.scss'
 
-App()
+const app = new App()
+
+document.body.hidden = false
 
 /*if ('serviceWorker' in navigator && location.hostname !== 'localhost') {
     window.addEventListener('load', () => {

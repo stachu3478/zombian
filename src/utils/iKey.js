@@ -1,8 +1,12 @@
 import { pxToCm } from '../utils/unitConverter'
 
+import EventListener from '../classes/EventListener'
+
 export const pressed = {
     aimDirection: 0
 }
+
+export const eventListener = new EventListener()
 
 if (navigator.maxTouchPoints) {
     const noneTouch = {identifier: -1}
@@ -74,6 +78,9 @@ if (navigator.maxTouchPoints) {
                     attackTouchTap = false
                     pressed.aimDirection = Math.atan2(touch.clientY - attackControllerTouch.clientY, touch.clientX - attackControllerTouch.clientX)
                 } break;
+                case pauseTouch.identifier : {
+                    pauseTouch = noneTouch
+                } break;
                 case outerTouch.identifier : preventDefault = false; break
             }
         }
@@ -100,7 +107,7 @@ if (navigator.maxTouchPoints) {
                 }; break;
                 case pauseTouch.identifier : {
                     pauseTouch = noneTouch
-                    pressed.p = true
+                    eventListener.trigger('pause')
                 } break;
                 case outerTouch.identifier : {
                     outerTouch = noneTouch
@@ -137,6 +144,7 @@ if (navigator.maxTouchPoints) {
 } else {
     document.body.addEventListener('keydown', evt => {
         pressed[evt.key] = true
+        if (evt.key === 'p') eventListener.trigger('pause')
     })
     document.body.addEventListener('keyup', evt => {
         pressed[evt.key] = false
@@ -147,6 +155,5 @@ if (navigator.maxTouchPoints) {
     })
     document.body.addEventListener('mousedown', evt => {
         pressed.Mouse = true
-        document.body.requestFullScreen()
     })
 }

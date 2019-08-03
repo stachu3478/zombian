@@ -5,8 +5,10 @@ import Renderer from "./Renderer"
 import TileMap from "./TileMap"
 import './style.css'
 
-import { pressed } from '../utils/iKey'
+import { pressed, eventListener } from '../utils/iKey'
 import { load } from '../components/images'
+
+
 
 class Game {
     constructor (canvas) {
@@ -19,39 +21,60 @@ class Game {
         this.hero = new Hero(this.keyboard, this.camera, this.ctx, this.tileMap)
 
         this.paused = false
+        this.started = false
 
         this.enemies = new Set()
-        this.spawnedEnemies = 1
+        this.spawnedEnemies = 0
+        this.nextEnemyTime = 0
         this.gameTime = 1
+
+        this.wave = this.wave.bind(this)
     }
 
     ready () {
         return load()
     }
 
+    pause () {
+        if (this.paused) return
+        this.paused = true
+        this.pauseTime = Date.now()
+        clearInterval(this.loop)
+        clearTimeout(this.nextEnemyTimeout)
+
+        this.ctx.fillStyle = "rgba(0,0,0,0.7)"
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
+        this.ctx.fillStyle = "white"
+        this.ctx.textAlign = "center"
+        this.ctx.font = "2cm Consolas"
+        this.ctx.fillText("Paused", this.canvas.width >> 1, this.canvas.height >> 1)
+        this.ctx.strokeText("Paused", this.canvas.width >> 1, this.canvas.height >> 1)
+    }
+
+    resume () {
+        if (!this.paused) return
+        this.paused = false
+        this.loop = setInterval(() => {
+            this.tick()
+        }, 30)
+        this.nextEnemyTimeout = setTimeout(this.wave, this.nextEnemyTime - this.pauseTime + this.nextEnemyTimestamp)
+    }
+
     start () {
-        this.spawnEnemy()
+        if (this.started) return
+        this.started = true
         this.wave()
         this.loop = setInterval(() => {
             this.tick()
         }, 30)
+
+        eventListener.on('pause', () => {
+            if (this.paused) this.resume()
+            else this.pause()
+        })
     }
     
     tick () {
-        if (this.keyboard.p) {
-            this.keyboard.p = false
-            this.paused = !this.paused
-            if (this.paused) {
-                this.ctx.fillStyle = "rgba(0,0,0,0.7)"
-                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
-                this.ctx.fillStyle = "white"
-                this.ctx.textAlign = "center"
-                this.ctx.font = "2cm Consolas"
-                this.ctx.fillText("Paused", this.canvas.width >> 1, this.canvas.height >> 1)
-                this.ctx.strokeText("Paused", this.canvas.width >> 1, this.canvas.height >> 1)
-            }
-        }
-        if (this.paused) return
         this.renderer.render()
         for (let enemy of this.enemies.values()) {
             enemy.tick()
@@ -69,14 +92,13 @@ class Game {
     }
 
     wave () {
-        const nextEnemyTime = (60000 + this.spawnedEnemies) / (this.spawnedEnemies)
-        console.log('Next enemy will appear in ', nextEnemyTime >> 10, ' seconds')
-        setTimeout(() => {
-            this.spawnEnemy()
-            this.gameTime += nextEnemyTime
-            this.spawnedEnemies++
-            if (this.hero.alive) this.wave()
-        }, nextEnemyTime)
+        this.spawnEnemy()
+        this.gameTime += this.nextEnemyTime
+        this.spawnedEnemies++
+        this.nextEnemyTime = (60000 + this.spawnedEnemies) / (this.spawnedEnemies)
+        console.log('Next enemy will appear in ', this.nextEnemyTime >> 10, ' seconds')
+        this.nextEnemyTimestamp = Date.now()
+        if (this.hero.alive) this.nextEnemyTimeout = setTimeout(this.wave, this.nextEnemyTime)
     }
 }
 

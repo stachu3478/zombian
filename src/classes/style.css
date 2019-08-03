@@ -1,6 +1,8 @@
 body {
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
     color: white;
+    overflow-x: hidden;
+    overflow-y: hidden
 }
 
 .game-interface {
@@ -12,12 +14,7 @@ canvas {
     position: absolute;
     top: 0;
     left: 0;
-    cursor: grab;
     z-index: -1;
-}
-
-canvas:active {
-    cursor: grabbing;
 }
 
 .mobile {
@@ -32,20 +29,20 @@ canvas:active {
 
 .move-controller, .aim-controller {
     bottom: 0;
-    width: 2cm;
-    height: 2cm;
+    width: 3cm;
+    height: 3cm;
 }
 
 .move-controller {
     left: 0;
     border-top-right-radius: 5mm;
-    background-image: url("/gui/move_controller.svg");
+    background-image: url("/gui/move-controller.svg");
 }
 
 .aim-controller {
     right: 0;
     border-top-left-radius: 5mm;
-    background-image: url("/gui/aim_controller.svg");
+    background-image: url("/gui/aim-controller.svg");
 }
 
 .pause-controller {

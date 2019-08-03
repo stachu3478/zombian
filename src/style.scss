@@ -38,8 +38,9 @@
     font-family: Consolas;
     h1 {
         color: lime;
-        text-shadow: -5px 0 black, 0 5px black, 5px 0 black, 0 -5px black;
-        background-color: rgba(200, 200, 200, 0.1)
+        font-size: 2cm;
+        text-shadow: -5px 0 2px green, 0 5px 2px green, 5px 0 2px red, 0 -5px 2px green;
+        background-image: radial-gradient(rgba(200, 200, 200, 0.1) black)
     }
     button {
         font-size: 1cm;
@@ -67,7 +68,7 @@
             position: static;
             border-radius: 3px;
             border: 1px white solid;
-            width: 25vw;
+            width: 33vw;
             height: 5mm;
             margin-top: 2mm;
             div {

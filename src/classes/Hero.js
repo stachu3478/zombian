@@ -81,15 +81,10 @@ class Hero extends Mob {
             const block = this.tileMap.getBlock(ax + mx, ay + my)
             if (block && block.c && block.c.intelligence) {
                 const enemy = block.c
-                enemy.hp -= 10
-                this.knock(enemy, 6)
-                enemy.target = this
-                if (enemy.intelligence >= 0.125) enemy.aim(this.x, this.y)
-                if (enemy.hp <= 0) {
-                    enemy.die()
+                if (enemy.deal(10)) {
                     this.kills++
                     this.killsOut.innerText = this.kills
-                }
+                } else this.knock(enemy, 6)
                 return true
             }
         }

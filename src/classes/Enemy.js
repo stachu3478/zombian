@@ -9,7 +9,7 @@ class Enemy extends Mob {
 
         this.hp = 100
         this.spawned = false
-        // this.kills = 0
+        this.shock = 0
 
         this.intelligence = intelligence
         this.inv = 1 - this.intelligence
@@ -107,12 +107,36 @@ class Enemy extends Mob {
     }
 
     render () {
-        this.ctx.save()
-        this.ctx.translate(this.x - this.camera.x, this.y - this.camera.y)
-        this.ctx.rotate(Math.atan2(this.yDir, this.xDir))
+        const {ctx} = this
+        ctx.save()
+        ctx.translate(this.x - this.camera.x, this.y - this.camera.y)
+        ctx.rotate(Math.atan2(this.yDir, this.xDir))
         this.renderBottom()
-        this.ctx.drawImage(this.image, -12, -12)
-        this.ctx.restore()
+        ctx.drawImage(this.image, -12, -12)
+        ctx.restore()
+
+        if (this.shock > 0) {
+            this.shock--
+            ctx.save()
+            ctx.translate(this.x - this.camera.x, this.y - this.camera.y)
+            ctx.lineCap = 'round'
+            if (this.shock < 33) ctx.globalAlpha = this.shock / 33
+            ctx.lineWidth = 7
+            ctx.beginPath()
+            ctx.strokeStyle = 'black'
+            ctx.moveTo(-12, -9)
+            ctx.lineTo(+12, -9)
+            ctx.stroke()
+
+            ctx.lineWidth = 5
+            ctx.beginPath()
+            ctx.strokeStyle = 'red'
+            ctx.moveTo(-12, -9)
+            if (this.hp < 50) ctx.lineCap = 'butt'
+            ctx.lineTo(-12 + this.hp * 0.24, -9)
+            ctx.stroke()
+            ctx.restore()
+        }
         // this.ctx.fillStyle = "red"
         // this.ctx.fillRect(this.x - 12 - this.camera.x, this.y - 12 - this.camera.y, 24, 24)
     }
@@ -139,6 +163,17 @@ class Enemy extends Mob {
             if (isTarget) return false
         }
         return true
+    }
+
+    deal (dmg) {
+        this.shock = 200
+        this.hp -= 10
+        this.target = this
+        if (this.intelligence >= 0.125) this.aim(this.x, this.y)
+        if (this.hp <= 0) {
+            this.die()
+            return true
+        }
     }
 }
 
