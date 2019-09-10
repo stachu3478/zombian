@@ -1,8 +1,8 @@
 import Camera from './Camera'
 
-import { getXY } from '../utils/fractal'
-import { img } from '../utils/imageImporter'
-import { zmod } from '../utils/math'
+import { getXY } from './utils/fractal'
+import { img } from './utils/imageImporter'
+import { zmod } from './utils/math'
 
 const zoom = 65525
 const ZIX = 1 / zoom

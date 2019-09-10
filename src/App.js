@@ -30,7 +30,7 @@ class App {
 
         if (!navigator.maxTouchPoints) {
             [...document.getElementsByClassName('mobile')].forEach(e => e.parentElement.removeChild(e))
-        }
+        } else [...document.getElementsByClassName('desktop')].forEach(e => e.parentElement.removeChild(e))
 
         this.buttons[0].addEventListener('click', this.handleStartGame)
 
@@ -45,7 +45,7 @@ class App {
         this.loadChecker.switchTo(2)
         this.loader.style.width = '11vw'
         this.progressMessage.innerText = "Updating game..."
-        import(/* webpackChunkName: "game" */ './classes/Game')
+        import(/* webpackChunkName: "game" */ './classes/Game/index')
         .then(({default: Game}) => this.gameloaded(Game))
         .catch(err => this.progressMessage.innerHTML = `Error loading game. Please inform us about it.<br><i>${err.message}</i>`)
     }
@@ -55,6 +55,7 @@ class App {
         this.on = true
         this.switcher.switchTo(0)
         this.randomEffectsTimeout = setTimeout(this.randomEffects, 10)
+        this.canvas.classList.add('blur')
     }
 
     stopMenu () {
@@ -62,6 +63,7 @@ class App {
         this.on = false
         this.switcher.switchTo(1)
         clearTimeout(this.randomEffectsTimeout)
+        this.canvas.classList.remove('blur')
     }
 
     randomEffects () {

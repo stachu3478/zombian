@@ -13,7 +13,7 @@
             <button>[FakeButtons] Activate Javascript</button>
         </noscript>
         <main>
-            <div class="main-menu">
+            <div class="main-menu overlay">
                 <header>
                     <a rel="noopener noreferer" target="blank" href="https://github.com/stachu3478/zombian">View code on GitHub</a>
                     <a rel="noopener noreferer" target="blank" href="https://github.com/stachu3478/zombian/issues">Report a bug</a>
@@ -21,7 +21,10 @@
                 <h1>ZOMBIAN</h1>
                 <div class="load-checker">
                     <button>PLAY</button>
-                    <button>RESUME</button>
+                    <div>
+                        <button>RESUME</button>
+                        <button>OPTIONS</button>
+                    </div>
                     <div>
                         <p class="progress-message">Updating interface...</p>
                         <div class="loader">
@@ -31,7 +34,7 @@
                 </div>
                 <footer>
                     <div>
-                        ZOMBIAN game addon (Build 4)
+                        ZOMBIAN game addon (Build 7)
                     </div>
                     <div>
                         Made by &copy; stachu3478.
@@ -39,20 +42,50 @@
                 </footer>
             </div>
             <div class="game-interface">
+                <section class="mobile tutorial-menu overlay hidden">
+                    <h2>Tutorial menu</h2>
+                    <p>
+                        Tutorial helps you with better starting playing this game. However, you
+                        can disable this feature by pressing "Disable" button or minimize
+                        to take less space on device screen by pressing "Minimize" button. You can
+                        open the tutorial back in options (future releases).
+                    </p>
+                    <button>DISABLE</button>
+                    <button>MINIMIZE</button>
+                    <button>BACK</button>
+                </section>
                 Some overlay: <br>
                 HP: <span id="hero-hp">100</span>
                 Kills: <span id="hero-kills">0</span>
-                State: <span id="hero-reload">Ready</span>
-                <div class="mobile pause-controller">
+                State: <span id="hero-reload">Ready</span><br>
+                <div class="tutorial hidden-fluent">
+                    <h2></h2>
+                    <p></p>
+                    <div>
+                        <span class="desktop close">X</span>
+                        <span class="desktop minimize">_</span>
+                    </div>
+                </div>
+                <div class="mobile pause controller">
                     ||
                 </div>
-                <div class="mobile move-controller">
+                <div class="mobile move controller">
                     MOVE
                 </div>
-                <div class="mobile aim-controller">
+                <div class="mobile aim controller">
                     AIM
                 </div>
             </div>
+            <section class="options hidden">
+                <div class="option tutorial-switch">
+                    Tutorial: <span>Enabled</span> <button>Disable</button>
+                </div>
+                <div class="option advanced-graphics-switch">
+                    Fancy graphics: <span>Enabled</span> <button>Disable</button>
+                </div>
+                <button>RESET GAME PROGRESS</button>
+                <button>BACK</button>
+            </section>
         </main>
         <canvas>
 

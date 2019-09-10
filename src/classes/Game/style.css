@@ -1,8 +1,7 @@
 body {
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
     color: white;
-    overflow-x: hidden;
-    overflow-y: hidden
+    overflow: hidden
 }
 
 .game-interface {
@@ -17,35 +16,42 @@ canvas {
     z-index: -1;
 }
 
+canvas.blur {
+    filter: blur(3px)
+}
+
 .mobile {
+    font-size: 3mm;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.controller {
     position: fixed;
     border: 1px white solid;
     background-color: rgba(250, 250, 250, 0.1);
     background-size: cover;
     color: white;
-    font-size: 3mm;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.move-controller, .aim-controller {
+.move, .aim {
     bottom: 0;
     width: 3cm;
     height: 3cm;
 }
 
-.move-controller {
+.move {
     left: 0;
     border-top-right-radius: 5mm;
     background-image: url("/gui/move-controller.svg");
 }
 
-.aim-controller {
+.aim {
     right: 0;
     border-top-left-radius: 5mm;
     background-image: url("/gui/aim-controller.svg");
 }
 
-.pause-controller {
+.pause {
     background-color: rgba(0, 0, 0, 0.5);
     top: 3mm;
     left: 0;
@@ -54,5 +60,5 @@ canvas {
     border-top-right-radius: 3mm;
     border-bottom-right-radius: 3mm;
     font-weight: bold;
-    font-size: 7mm
+    font-size: 7mm;
 }

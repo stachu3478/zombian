@@ -27,6 +27,7 @@ class ElementSwitcher { // quick switch between elements show one, hide others
         else element.classList.add(this.hiddenClass)
     }
 
+    // FIXME
     mountAndUnmount (enabled, element, index) {
         if (enabled) this.parentElements[index].appendChild(element)
         else element.parentElement.removeChild(element)

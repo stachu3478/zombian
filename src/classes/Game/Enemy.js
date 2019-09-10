@@ -1,28 +1,50 @@
 import Mob from './Mob'
-import { zombieImages } from '../components/images'
+import { zombieImages } from './components/images'
 
 const PI2 = Math.PI * 2
 
+/**
+ * Zombie that spawns and attacks the player
+ */
 class Enemy extends Mob {
+    /**
+     * Creates new zombie
+     * @param {Camera} camera - camera used for scrolling
+     * @param {CanvasRenderingContext2D} ctx - context used to render on
+     * @param {TileMap} tileMap - map to assign
+     * @param {Number} intelligence - The zombie's intelligence {@link Enemy#intelligence}
+     */
     constructor (camera, ctx, tileMap, intelligence) {
         super(camera, ctx, tileMap)
 
+        /** Enemy's health */
         this.hp = 100
+        /** Tells the entity has already spawned */
         this.spawned = false
+        /** Tells the entity has received damage last time, the higher value is the less time is since then */
         this.shock = 0
 
+        /** float(0, 1) values describing its behaviour */
         this.intelligence = intelligence
+        /** The inverse of its stupidity */
         this.inv = 1 - this.intelligence
+        /** Image to use for rendering the enemy. Different zombie intelligence makes different image. */
         this.image = zombieImages[Math.floor(this.inv * 4)]
 
+        /** Current cos(direction) */
         this.xDir = 0
+        /** Current sin(direction) */
         this.yDir = 1
+
+        /** Enemy's target which could be {@link Hero} */
+        this.target = null
 
         this.checkPos = this.checkPos.bind(this)
 
         this.spawn()
     }
 
+    /** Tries to find a place to spawn, if none, waits */
     spawn () {
         const randomSpawn = (Math.random() * 4) >> 0
         switch (randomSpawn) {
@@ -50,6 +72,7 @@ class Enemy extends Mob {
         return true
     }
 
+    /** The standard time processing function of entity */
     tick () {
         if (!this.spawned) return this.spawn()
         if (Math.hypot(this.x - this.targetX, this.y - this.targetY) <= 8) this.changeDir()
@@ -67,20 +90,29 @@ class Enemy extends Mob {
         this.render()
     }
 
+    /** Let's it looking for {@link Hero} and changing direction */
     changeDir () {
         const rx = Math.random() * 640 - 320
         const ry = Math.random() * 640 - 320
         if (!this.target) {
             this.searchForTarget()
-            this.targetX = rx
-            this.targetY = ry
+            this.targetX = this.x + rx
+            this.targetY = this.y + ry
+        } else if (this.hp === 100 || this.intelligence < 0.375) {
+            this.targetX = (this.x + rx) * this.inv + this.target.x * this.intelligence
+            this.targetY = (this.y + ry) * this.inv + this.target.y * this.intelligence
         } else {
-            this.targetX = rx * this.inv + this.target.x * this.intelligence
-            this.targetY = ry * this.inv + this.target.y * this.intelligence
+            this.targetX = this.target.x
+            this.targetY = this.target.y
         }
-        this.aim(this.targetX, this.targetY)
+        this.aim()
     }
 
+    /**
+     * Sets it's target to specified direction
+     * @param {Number} x - X target position 
+     * @param {Number} y - Y target position
+     */
     aim (x = this.targetX, y = this.targetY) {
         this.targetX = x
         this.targetY = y
@@ -89,14 +121,15 @@ class Enemy extends Mob {
         let dir = this.currentDir - this.targetDir
         while (dir > Math.PI) {
             dir -= PI2
-            this.targetDir -= PI2
+            this.currentDir -= PI2
         }
         while (dir < -Math.PI) {
             dir += PI2
-            this.targetDir += PI2
+            this.currentDir += PI2
         }
     }
 
+    /** Downloads random block around and checks for {@link Hero}'s existence */
     searchForTarget () {
         const rx = this.x + Math.random() * 320 - 160
         const ry = this.y + Math.random() * 320 - 160
@@ -106,6 +139,7 @@ class Enemy extends Mob {
         }
     }
 
+    /** Renders an entity */
     render () {
         const {ctx} = this
         ctx.save()
@@ -141,10 +175,17 @@ class Enemy extends Mob {
         // this.ctx.fillRect(this.x - 12 - this.camera.x, this.y - 12 - this.camera.y, 24, 24)
     }
 
+    /** Function that removes itself from the {@link Game} */
     die () {
 
     }
 
+    /**
+     * Checks if the target tile is occupied and available to claim position on
+     * @param {Number} px - Pixel X 
+     * @param {Number} py - Pixel Y
+     * @param {Number} isTarget - stricts the search to have no entity existence on tile
+     */
     checkPos (px, py, isTarget) {
         const block = this.tileMap.getBlock(px, py)
         if (!block) {
@@ -165,11 +206,15 @@ class Enemy extends Mob {
         return true
     }
 
-    deal (dmg) {
+    /**
+     * Deals damage to entity
+     * @param {Number} dmg - amount of damage to deal
+     */
+    deal (dmg, mob) {
         this.shock = 200
-        this.hp -= 10
-        this.target = this
-        if (this.intelligence >= 0.125) this.aim(this.x, this.y)
+        this.hp -= dmg
+        this.target = mob
+        if (this.intelligence >= 0.125) this.aim(mob.x, mob.y)
         if (this.hp <= 0) {
             this.die()
             return true

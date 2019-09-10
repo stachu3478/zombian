@@ -1,6 +1,6 @@
-import { pxToCm } from '../utils/unitConverter'
+import { pxToCm } from './unitConverter'
 
-import EventListener from '../classes/EventListener'
+import EventListener from '../../EventListener'
 
 export const pressed = {
     aimDirection: 0
@@ -15,9 +15,9 @@ if (navigator.maxTouchPoints) {
     let pauseTouch = noneTouch
     let outerTouch = noneTouch
     let attackTouchTap = true
-    const moveControllerElement = document.getElementsByClassName("move-controller")[0]
-    const aimControllerElement = document.getElementsByClassName("aim-controller")[0]
-    const pauseControllerElement = document.getElementsByClassName("pause-controller")[0]
+    const moveControllerElement = document.getElementsByClassName("move")[0]
+    const aimControllerElement = document.getElementsByClassName("aim")[0]
+    const pauseControllerElement = document.getElementsByClassName("pause")[0]
     document.body.addEventListener('touchstart', evt => {
         let moveTouch = false
         let attackTouch = false
@@ -99,11 +99,16 @@ if (navigator.maxTouchPoints) {
                     pressed.ArrowDown = 0;
                     pressed.ArrowUp = 0;
                     moveControllerTouch = noneTouch
+                    eventListener.trigger('movement')
                 }; break;
                 case attackControllerTouch.identifier : {
                     pressed.SpaceBar = false
                     attackControllerTouch = noneTouch
-                    if (attackTouchTap) pressed.Mouse = true
+                    if (attackTouchTap) {
+                        pressed.Mouse = true
+                        eventListener.trigger('attack')
+                    }
+                    else eventListener.trigger('aim')
                 }; break;
                 case pauseTouch.identifier : {
                     pauseTouch = noneTouch
@@ -148,12 +153,15 @@ if (navigator.maxTouchPoints) {
     })
     document.body.addEventListener('keyup', evt => {
         pressed[evt.key] = false
+        if (evt.key.match(/Arrow/i)) eventListener.trigger('movement')
     })
     document.body.addEventListener('mousemove', evt => {
         pressed.aimX = evt.offsetX
         pressed.aimY = evt.offsetY
+        eventListener.trigger('aim')
     })
     document.body.addEventListener('mousedown', evt => {
         pressed.Mouse = true
+        eventListener.trigger('attack')
     })
 }

@@ -3,12 +3,11 @@ import Hero from "./Hero"
 import Enemy from "./Enemy"
 import Renderer from "./Renderer"
 import TileMap from "./TileMap"
+import Tutorial from "./Tutorial/index.js"
 import './style.css'
 
-import { pressed, eventListener } from '../utils/iKey'
-import { load } from '../components/images'
-
-
+import { pressed, eventListener } from './utils/iKey'
+import { load } from './components/images'
 
 class Game {
     constructor (canvas) {
@@ -19,6 +18,7 @@ class Game {
         this.renderer = new Renderer(this.camera, this.canvas, this.ctx)
         this.tileMap = new TileMap()
         this.hero = new Hero(this.keyboard, this.camera, this.ctx, this.tileMap)
+        this.tutorial = new Tutorial(eventListener, document.getElementsByClassName('tutorial')[0], document.getElementsByClassName('tutorial-menu')[0])
 
         this.paused = false
         this.started = false
@@ -86,6 +86,7 @@ class Game {
         const enemy = new Enemy(this.camera, this.ctx, this.tileMap, Math.random())
         this.enemies.add(enemy)
         enemy.die = () => {
+            eventListener.trigger('kill')
             enemy.unclaimBlock()
             this.enemies.delete(enemy)
         }

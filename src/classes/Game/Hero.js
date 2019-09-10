@@ -29,23 +29,26 @@ class Hero extends Mob {
     }
 
     tick () {
-        const {ArrowRight = 0, ArrowLeft = 0, ArrowUp = 0, ArrowDown = 0, SpaceBar = 0, aimDirection, aimX = 0, aimY = 0} = this.keyboard
+        const {ArrowRight = 0, ArrowLeft = 0, ArrowUp = 0, ArrowDown = 0, aimDirection, aimX = 0, aimY = 0} = this.keyboard
 
-        const dir = aimDirection || Math.atan2(-this.y + this.camera.y + aimY, -this.x + this.camera.x + aimX)
-        this.xDir = Math.cos(dir)
-        this.yDir = Math.sin(dir)
+        if (this.alive) {
+            const dir = aimDirection || Math.atan2(-this.y + this.camera.y + aimY, -this.x + this.camera.x + aimX)
+            this.xDir = Math.cos(dir)
+            this.yDir = Math.sin(dir)
 
-        const moveX = (ArrowRight - ArrowLeft)
-        const moveY = (ArrowDown - ArrowUp)
-        if ((moveX || moveY) && this.alive) {
-            // const dir = Math.atan2(moveY, moveX)
-            this.moveBy(moveX * Math.abs(moveX * 3 + this.xDir), moveY * Math.abs(moveY * 3 + this.yDir))
+            const moveX = (ArrowRight - ArrowLeft)
+            const moveY = (ArrowDown - ArrowUp)
+            if (moveX || moveY) {
+                // const dir = Math.atan2(moveY, moveX)
+                this.moveBy(moveX * Math.abs(moveX * 3 + this.xDir), moveY * Math.abs(moveY * 3 + this.yDir))
+            }
+
+            if (this.keyboard.Mouse) {
+                this.attack()
+                this.keyboard.Mouse = false
+            }
         }
 
-        if (this.keyboard.Mouse) {
-            this.attack()
-            this.keyboard.Mouse = false
-        }
         this.camera.scrollTo(this.x, this.y, true)
 
         this.render()
@@ -64,7 +67,7 @@ class Hero extends Mob {
     }
 
     attack () {
-        if (!this.reloaded || !this.alive) return false
+        if (!this.reloaded) return false
         const ax = this.x + this.xDir * 32
         const ay = this.y + this.yDir * 32
         this.ctx.fillStyle = "yellow"
@@ -81,7 +84,7 @@ class Hero extends Mob {
             const block = this.tileMap.getBlock(ax + mx, ay + my)
             if (block && block.c && block.c.intelligence) {
                 const enemy = block.c
-                if (enemy.deal(10)) {
+                if (enemy.deal(10, this)) {
                     this.kills++
                     this.killsOut.innerText = this.kills
                 } else this.knock(enemy, 6)
