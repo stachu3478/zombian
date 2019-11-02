@@ -1,5 +1,9 @@
 const offset = 640
 const tileSize = 32
+const tileSizeModifier = Math.round(Math.log2(32))
+
+const getCoord = v => v >> tileSizeModifier
+
 class TileMap {
     constructor (props) {
         this.sizeX = 40
@@ -8,7 +12,7 @@ class TileMap {
     }
 
     getBlock (x, y) {
-        const tx = ((x + offset) / tileSize) << 0, ty = ((y + offset) / tileSize) << 0
+        const tx = getCoord(x + offset), ty = getCoord(y + offset)
         if (
             tx > -1 && tx < 41
             && ty > -1 && ty < 41
@@ -16,7 +20,7 @@ class TileMap {
     }
 
     setBlock (x, y, data) {
-        const tx = ((x + offset) / tileSize) << 0, ty = ((y + offset) / tileSize) << 0
+        const tx = getCoord(x + offset), ty = getCoord(y + offset)
         if (
             tx > -1 && tx < 40
             && ty > -1 && ty < 40
@@ -30,6 +34,17 @@ class TileMap {
             // Object.keys(data).forEach(k => this.map[idx][k] = data[k])
         }
         return true
+    }
+
+    /**
+     * Tells the given coordinates are same blocks.
+     * @param {Number} x1 - First block x
+     * @param {Number} y1 - First block y
+     * @param {Number} x2 - Second block x
+     * @param {Number} y2 - Second block y
+     */
+    isSameBlock (x1, y1, x2, y2) {
+        return getCoord(x1) === getCoord(x2) && getCoord(y1) === getCoord(y2)
     }
 }
 

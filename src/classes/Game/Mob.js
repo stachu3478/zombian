@@ -1,4 +1,10 @@
 class Mob {
+    /**
+     * Creates a living entity.
+     * @param {import('./Camera').default} camera - camera to use
+     * @param {CanvasRenderingContext2D} ctx - canvas context to render on 
+     * @param {import('./TileMap').default} tileMap - tile map to use for binding position and collision detection
+     */
     constructor (camera, ctx, tileMap) {
         this.camera = camera
         this.ctx = ctx
@@ -14,22 +20,33 @@ class Mob {
     }
 
     moveBy (x, y) {
-        this.unclaimBlock()
+        const nX = this.x + x, nY = this.y + y
+        const blockReclaim = this.tileMap.isSameBlock(this.x, this.y, nX, nY)
+        if (blockReclaim) {
+            this.unclaimBlock()
+            if (!this.checkPos(nX, nY, true) || !this.loopMyPixels(this.checkPos, nX, nY)) {
+                this.claimBlock()
+                return false
+            }
+        } else this.loopMyPixels(this.checkPos, nX, nY)
 
-        if (!this.checkPos(this.x + x, this.y + y, true) || !this.loopMyPixels(this.checkPos, this.x + x, this.y + y)) {
-            this.claimBlock()
-            return false
-        }
-
-        this.x += x
-        this.y += y
-        this.claimBlock()
+        this.x = nX
+        this.y = nY
+        if (blockReclaim) this.claimBlock()
 
         this.step += Math.hypot(x, y)
 
         return true
     }
 
+    /**
+     * Checks for overlapping with other entity
+     * @param {Number} px - X coordinate to check
+     * @param {Number} py - Y coordinate to check
+     * @param {Boolean} isTarget - Specifies the function to treat
+     * checking block as it is claimed by the checker
+     * @returns {Boolean} - Boolean determining the existence of collision
+     */
     checkPos (px, py, isTarget) {
         const block = this.tileMap.getBlock(px, py)
         if (!block) {
@@ -37,6 +54,7 @@ class Mob {
         }
         if (block.c) {
             const mob = block.c
+            if (this === mob) return true
             if (Math.abs(mob.x - this.x) < this.squareSize && Math.abs(mob.y - this.y) < this.squareSize) {
                 this.knock(mob, 2)
                 return false
@@ -71,7 +89,7 @@ class Mob {
     renderBottom () {
         const stepProgress = this.step % 48
         const {ctx} = this
-        ctx.lineWidth = 8 // for throusers xdxdxdxdddddddd
+        ctx.lineWidth = 8 // for trousers xdxdxdxdddddddd
         ctx.lineCap = 'round'
         ctx.strokeStyle = 'navy'
         ctx.beginPath()
