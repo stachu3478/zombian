@@ -50,19 +50,19 @@ class Enemy extends Mob {
         switch (randomSpawn) {
             case 0: {
                 this.x = -600
-                this.y = Math.random() * 1260 - 620
+                this.y = Math.random() * 1260 - 600
             }break;
             case 1: {
                 this.x = 600
-                this.y = Math.random() * 1260 - 620
+                this.y = Math.random() * 1260 - 600
             }break;
             case 2: {
-                this.y = -620
-                this.x = Math.random() * 1260 - 620
+                this.y = -600
+                this.x = Math.random() * 1260 - 600
             }break;
             default: {
-                this.y = 620
-                this.x = Math.random() * 1260 - 620
+                this.y = 600
+                this.x = Math.random() * 1260 - 600
             }break;
         }
         if (this.checkPos(this.x, this.y, true)) this.claimBlock()
@@ -181,29 +181,14 @@ class Enemy extends Mob {
     }
 
     /**
-     * Checks if the target tile is occupied and available to claim position on
-     * @param {Number} px - Pixel X 
-     * @param {Number} py - Pixel Y
-     * @param {Number} isTarget - stricts the search to have no entity existence on tile
+     * @override
      */
-    checkPos (px, py, isTarget) {
-        const block = this.tileMap.getBlock(px, py)
-        if (!block) {
-            return false
-        }
-        if (block.c) {
-            const mob = block.c
-            if (this === mob) {return false}
-            if (Math.abs(mob.x - this.x) < 24 && Math.abs(mob.y - this.y) < 24) {
-                if (mob.keyboard) {
-                    mob.deal(10)
-                    this.knock(mob, 12)
-                } else this.knock(mob, 2)
-                return false
-            }
-            if (isTarget) return false
-        }
-        return true
+    overlaps (mob) {
+        if (mob.keyboard) {
+            mob.deal(10)
+            this.knock(mob, 12)
+        } else this.knock(mob, 2)
+        return false
     }
 
     /**

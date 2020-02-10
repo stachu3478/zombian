@@ -55,13 +55,20 @@ class Mob {
         if (block.c) {
             const mob = block.c
             if (this === mob) return true
-            if (Math.abs(mob.x - this.x) < this.squareSize && Math.abs(mob.y - this.y) < this.squareSize) {
-                this.knock(mob, 2)
-                return false
-            }
+            if (Math.abs(mob.x - this.x) < this.squareSize && Math.abs(mob.y - this.y) < this.squareSize)
+                return this.overlaps(mob)
             if (isTarget) return false
         }
         return true
+    }
+
+    /**
+     * This function is run when mob overlaps with another entity
+     * @param {Mob} mob - mob which overlaps
+     */
+    overlaps (mob) {
+        this.knock(mob, 2)
+        return false
     }
 
     unclaimBlock (px = this.x, py = this.y) {
