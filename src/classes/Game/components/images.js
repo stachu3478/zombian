@@ -22,7 +22,7 @@ const loadImage = (path, callbackArray, i) => {
 }
 
 /**
- * Loads list of images, for svgs albo converts to png
+ * Loads list of images, for svgs and converts to png
  * @param {String} name - image base path 
  * @param {Number} range - number after the base path to loop for (starts from 1)
  * @param {String} extension - image extension

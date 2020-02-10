@@ -9,22 +9,26 @@ class Hero extends Mob {
     constructor (keyboard, camera, ctx, tileMap) {
         super(camera, ctx, tileMap)
 
-        this.hp = 100
-        this.kills = 0
-        this.reloaded = true
-
         this.keyboard = keyboard
-
-        this.alive = true
-
-        this.xDir = 0
-        this.yDir = 1
 
         this.hpOut = document.getElementById('hero-hp')
         this.killsOut = document.getElementById('hero-kills')
         this.reloadOut = document.getElementById('hero-reload')
 
         this.checkPos = this.checkPos.bind(this)
+        this.claimBlock()
+    }
+
+    reset () {
+        this.unclaimBlock()
+        this.hp = 100
+        this.kills = 0
+        this.reloaded = true
+        this.alive = true
+        this.xDir = 0
+        this.yDir = 1
+        this.x = 0
+        this.y = 0
         this.claimBlock()
     }
 

@@ -73,6 +73,16 @@ class Game {
             else this.pause()
         })
     }
+
+    restart () {
+        if (!this.started) return
+        this.started = false
+        clearInterval(this.loop)
+        for (let enemy of this.enemies.values()) {
+            enemy.unclaimBlock()
+        }
+        this.enemies = new Set()
+    }
     
     tick () {
         this.renderer.render()

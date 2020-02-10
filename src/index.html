@@ -23,7 +23,7 @@
                     <button>PLAY</button>
                     <div>
                         <button>RESUME</button>
-                        <button>OPTIONS</button>
+                        <button id="options-button" hidden>OPTIONS</button>
                     </div>
                     <div>
                         <p class="progress-message">Updating interface...</p>
@@ -83,8 +83,9 @@
                 <div class="option advanced-graphics-switch">
                     Fancy graphics: <span>Enabled</span> <button>Disable</button>
                 </div>
-                <button>RESET GAME PROGRESS</button>
-                <button>BACK</button>
+                <span id="options-state"></span>
+                <button id="reset-game-progress">RESET GAME PROGRESS</button>
+                <button id="back-options">BACK</button>
             </section>
         </main>
         <canvas>

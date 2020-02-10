@@ -101,6 +101,20 @@ class App {
             this.loadChecker.switchTo(2)
             this.stopMenu()
         })
+
+        // Options TODO implement
+        document.getElementById('options-button').addEventListener('click', evt => {
+            this.switcher.switchTo(2)
+        })
+
+        document.getElementById('back-options').addEventListener('click', evt => {
+            this.switcher.switchTo(0)
+        })
+
+        document.getElementById('reset-game-progress').addEventListener('click', evt => {
+            this.game.restart() // reset game
+            this.loadChecker.switchTo(0) // switch resume to play button
+        })
     
         document.addEventListener('fullscreenchange', evt => { // Fullscreen disability detection
             if (!document.fullscreenElement) this.blurHandler()
